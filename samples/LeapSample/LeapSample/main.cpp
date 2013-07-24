@@ -1,4 +1,4 @@
-/******************************************************************************\
+﻿/******************************************************************************\
  * Copyright (C) 2012-2013 Leap Motion, Inc. All rights reserved.               *
  * Leap Motion proprietary and confidential. Not for distribution.              *
  * Use subject to the terms of the Leap Motion SDK Agreement available at       *
@@ -46,11 +46,11 @@ void SampleListener::onFrame(const Controller& controller) {
   // Get the most recent frame and report some basic information
   const Frame frame = controller.frame();
   std::cout << "Frame id: " << frame.id()
-  << ", timestamp: " << frame.timestamp()
-  << ", hands: " << frame.hands().count()
-  << ", fingers: " << frame.fingers().count()
-  << ", tools: " << frame.tools().count()
-  << ", gestures: " << frame.gestures().count() << std::endl;
+            << ", timestamp: " << frame.timestamp()
+            << ", hands: " << frame.hands().count()
+            << ", fingers: " << frame.fingers().count()
+            << ", tools: " << frame.tools().count()
+            << ", gestures: " << frame.gestures().count() << std::endl;
   
   if (!frame.hands().empty()) {
     // Get the first hand
@@ -66,12 +66,12 @@ void SampleListener::onFrame(const Controller& controller) {
       }
       avgPos /= (float)fingers.count();
       std::cout << "Hand has " << fingers.count()
-      << " fingers, average finger tip position" << avgPos << std::endl;
+                << " fingers, average finger tip position" << avgPos << std::endl;
     }
     
     // Get the hand's sphere radius and palm position
     std::cout << "Hand sphere radius: " << hand.sphereRadius()
-    << " mm, palm position: " << hand.palmPosition() << std::endl;
+              << " mm, palm position: " << hand.palmPosition() << std::endl;
     
     // Get the hand's normal vector and direction
     const Vector normal = hand.palmNormal();
@@ -79,8 +79,8 @@ void SampleListener::onFrame(const Controller& controller) {
     
     // Calculate the hand's pitch, roll, and yaw angles
     std::cout << "Hand pitch: " << direction.pitch() * RAD_TO_DEG << " degrees, "
-    << "roll: " << normal.roll() * RAD_TO_DEG << " degrees, "
-    << "yaw: " << direction.yaw() * RAD_TO_DEG << " degrees" << std::endl;
+              << "roll: " << normal.roll() * RAD_TO_DEG << " degrees, "
+              << "yaw: " << direction.yaw() * RAD_TO_DEG << " degrees" << std::endl;
   }
   
   // Get gestures
@@ -107,38 +107,38 @@ void SampleListener::onFrame(const Controller& controller) {
           sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * PI;
         }
         std::cout << "Circle id: " << gesture.id()
-        << ", state: " << gesture.state()
-        << ", progress: " << circle.progress()
-        << ", radius: " << circle.radius()
-        << ", angle " << sweptAngle * RAD_TO_DEG
-        <<  ", " << clockwiseness << std::endl;
+                  << ", state: " << gesture.state()
+                  << ", progress: " << circle.progress()
+                  << ", radius: " << circle.radius()
+                  << ", angle " << sweptAngle * RAD_TO_DEG
+                  <<  ", " << clockwiseness << std::endl;
         break;
       }
       case Gesture::TYPE_SWIPE:
       {
         SwipeGesture swipe = gesture;
         std::cout << "Swipe id: " << gesture.id()
-        << ", state: " << gesture.state()
-        << ", direction: " << swipe.direction()
-        << ", speed: " << swipe.speed() << std::endl;
+                  << ", state: " << gesture.state()
+                  << ", direction: " << swipe.direction()
+                  << ", speed: " << swipe.speed() << std::endl;
         break;
       }
       case Gesture::TYPE_KEY_TAP:
       {
         KeyTapGesture tap = gesture;
         std::cout << "Key Tap id: " << gesture.id()
-        << ", state: " << gesture.state()
-        << ", position: " << tap.position()
-        << ", direction: " << tap.direction()<< std::endl;
+                  << ", state: " << gesture.state()
+                  << ", position: " << tap.position()
+                  << ", direction: " << tap.direction()<< std::endl;
         break;
       }
       case Gesture::TYPE_SCREEN_TAP:
       {
         ScreenTapGesture screentap = gesture;
         std::cout << "Screen Tap id: " << gesture.id()
-        << ", state: " << gesture.state()
-        << ", position: " << screentap.position()
-        << ", direction: " << screentap.direction()<< std::endl;
+                  << ", state: " << gesture.state()
+                  << ", position: " << screentap.position()
+                  << ", direction: " << screentap.direction()<< std::endl;
         break;
       }
       default:
