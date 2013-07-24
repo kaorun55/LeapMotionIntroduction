@@ -11,14 +11,16 @@
 #include <Leap.h>
 #include <LeapMath.h>
 
+using namespace Leap;
+
 int main(int argc, const char * argv[])
 {
-  Leap::Controller controller;
-  Leap::Frame frame = controller.frame();
+  Controller controller;
+  Frame frame = controller.frame();
   if (frame.pointables().count() > 0) {
-    Leap::Pointable pointable = frame.pointables()[0];
-    Leap::ScreenList screens = controller.calibratedScreens();
-    Leap::Screen screen = screens.closestScreenHit(pointable);
+    Pointable pointable = frame.pointables()[0];
+    ScreenList screens = controller.calibratedScreens();
+    Screen screen = screens.closestScreenHit(pointable);
   }
   
   return 0;
