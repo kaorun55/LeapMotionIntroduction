@@ -48,6 +48,15 @@ void TouchEmulationApp::draw()
         float x = normalizedPosition.x * windowWidth;
         float y = windowHeight - normalizedPosition.y * windowHeight;
 
+        auto distance = pointable.touchDistance();
+        auto zone = pointable.touchZone();
+
+        {
+            std::stringstream ss;
+            ss << "distance : " << distance << ", zone : " << zone << std::endl;
+            ::OutputDebugStringA( ss.str().c_str() );
+        }
+
         if(pointable.touchDistance() > 0 && pointable.touchZone() != Leap::Pointable::Zone::ZONE_NONE)
         {
             gl::color(0, 1, 0, 1 - pointable.touchDistance());
