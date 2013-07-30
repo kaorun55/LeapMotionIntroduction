@@ -52,14 +52,11 @@ void ScreenLocationApp::draw()
         ss << "Screen Information" << std::endl;
         for ( auto screen : leap.locatedScreens() ) {
             ss << screen.widthPixels() << ", " << screen.heightPixels() << std::endl;
-            ss << screen.horizontalAxis() << std::endl;
-            ss << screen.verticalAxis() << std::endl;
-            ss << screen.bottomLeftCorner() << std::endl;
+            ss << "Horizontal axis: " << screen.horizontalAxis() << std::endl;
+            ss << "Vertical axis: " << screen.verticalAxis() << std::endl;
+            ss << "Bottom left corner: " << screen.bottomLeftCorner() << std::endl;
         }
         gl::drawString( ss.str(), Vec2f( 0, 0 ), ColorA( 0, 0, 0, 1 ) );
-
-        std::cout << ss.str() << std::endl;
-        //::OutputDebugStringA( ss.str().c_str() );
     }
 
     //for( int p = 0; p < pointables.count(); p++ )
@@ -85,7 +82,7 @@ void ScreenLocationApp::draw()
 
         // Find the pixel coordinates of an intersection point
         {
-            Leap::Vector normalizedCoordinates = screen.intersect(pointable, true, 1);
+            Leap::Vector normalizedCoordinates = screen.intersect(pointable, true);
 
             float x = normalizedCoordinates.x * windowWidth;
             float y = windowHeight - normalizedCoordinates.y * windowHeight;
@@ -100,32 +97,11 @@ void ScreenLocationApp::draw()
             Leap::Vector screenProjection = screen.project(pointable.tipPosition(), false);
             float x = screenProjection.x;
             float y = screenProjection.y;
-            {
-                std::stringstream ss;
-                ss << "Projection point : " << screenProjection << std::endl;
-                gl::drawString( ss.str(), Vec2f( 0, 120 ), ColorA( 0, 0, 0, 1 ) );
-            }
+
+            std::stringstream ss;
+            ss << "Projection point : " << screenProjection << std::endl;
+            gl::drawString( ss.str(), Vec2f( 0, 120 ), ColorA( 0, 0, 0, 1 ) );
         }
-
-        // Find the distance between the pointing finger or tool and the screen
-        //Leap::Vector intersection = screen.intersect(pointable, false);
-        //Leap::Vector tipToScreen = intersection - pointable.tipPosition();
-        //float pointingDistance = tipToScreen.magnitude();
-        //{
-        //    std::stringstream ss;
-        //    ss << "distance : " << pointingDistance << std::endl;
-        //    ::OutputDebugStringA( ss.str().c_str() );
-        //}
-        ////////
-
-        // Find the distance between the pointing finger or tool and the screen
-        //float perpendicularDistance = screen.distanceToPoint(pointable.tipPosition());
-        //{
-        //    std::stringstream ss;
-        //    ss << "distance : " << perpendicularDistance << std::endl;
-        //    ::OutputDebugStringA( ss.str().c_str() );
-        //}
-        ////////
 
         if(pointable.touchDistance() > 0 && pointable.touchZone() != Leap::Pointable::Zone::ZONE_NONE)
         {
