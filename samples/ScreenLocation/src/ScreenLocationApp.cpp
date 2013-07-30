@@ -52,11 +52,14 @@ void ScreenLocationApp::draw()
         ss << "Screen Information" << std::endl;
         for ( auto screen : leap.locatedScreens() ) {
             ss << screen.widthPixels() << ", " << screen.heightPixels() << std::endl;
-            ss << screen << std::endl;
+            ss << screen.horizontalAxis() << std::endl;
+            ss << screen.verticalAxis() << std::endl;
+            ss << screen.bottomLeftCorner() << std::endl;
         }
         gl::drawString( ss.str(), Vec2f( 0, 0 ), ColorA( 0, 0, 0, 1 ) );
 
-        ::OutputDebugStringA( ss.str().c_str() );
+        std::cout << ss.str() << std::endl;
+        //::OutputDebugStringA( ss.str().c_str() );
     }
 
     //for( int p = 0; p < pointables.count(); p++ )
