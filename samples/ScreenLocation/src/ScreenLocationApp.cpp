@@ -1,4 +1,4 @@
-#include "cinder/app/AppNative.h"
+﻿#include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 
 #include "Leap.h"
@@ -26,19 +26,6 @@ void ScreenLocationApp::setup()
     windowWidth = screen.widthPixels();
     windowHeight = screen.heightPixels();
 
-    for ( auto screen : leap.locatedScreens() ) {
-        std::stringstream ss;
-        ss << screen.widthPixels() << ", " << screen.heightPixels() << std::endl;
-        ss << screen << std::endl;
-        ::OutputDebugStringA( ss.str().c_str() );
-    }
-
-    for ( auto device : leap.devices() ) {
-        std::stringstream ss;
-        ss << device << std::endl;
-        ::OutputDebugStringA( ss.str().c_str() );
-    }
-
     this->setWindowPos( 0, 0 );
     this->setWindowSize(windowWidth, windowHeight);
     this->setFrameRate(120);
@@ -59,39 +46,63 @@ void ScreenLocationApp::draw()
     Leap::PointableList pointables = leap.frame().pointables();
     Leap::InteractionBox iBox = leap.frame().interactionBox();
 
+    // スクリーン情報を表示する
+    {
+        std::stringstream ss;
+        ss << "Screen Information" << std::endl;
+        for ( auto screen : leap.locatedScreens() ) {
+            ss << screen.widthPixels() << ", " << screen.heightPixels() << std::endl;
+            ss << screen << std::endl;
+        }
+        gl::drawString( ss.str(), Vec2f( 0, 0 ), ColorA( 0, 0, 0, 1 ) );
+
+        ::OutputDebugStringA( ss.str().c_str() );
+    }
+
     //for( int p = 0; p < pointables.count(); p++ )
     if ( !pointables.empty() )
     {
         //Leap::Pointable pointable = pointables[p];
         Leap::Pointable pointable = pointables[0];
 
-        // Touch Emulation
-        //Leap::Vector normalizedPosition = iBox.normalizePoint(pointable.stabilizedTipPosition());
-
-        //float x = normalizedPosition.x * windowWidth;
-        //float y = windowHeight - normalizedPosition.y * windowHeight;
-        ////////
-
         Leap::ScreenList screens = leap.locatedScreens();
         Leap::Screen screen = screens.closestScreenHit(pointable);
 
-        // Find the pixel coordinates of an intersection point
-        Leap::Vector normalizedCoordinates = screen.intersect(pointable, true, 1);
+        // Touch Emulation
+        {
+            Leap::Vector normalizedPosition = iBox.normalizePoint(pointable.stabilizedTipPosition());
 
-        float x = normalizedCoordinates.x * windowWidth;
-        float y = windowHeight - normalizedCoordinates.y * windowHeight;
-        ////////
+            float x = normalizedPosition.x * windowWidth;
+            float y = windowHeight - normalizedPosition.y * windowHeight;
+
+            std::stringstream ss;
+            ss << "Touch Emulation Point : " << "(" << x << ", " << y << ")" << std::endl;
+            gl::drawString( ss.str(), Vec2f( 0, 100 ), ColorA( 0, 0, 0, 1 ) );
+        }
+
+        // Find the pixel coordinates of an intersection point
+        {
+            Leap::Vector normalizedCoordinates = screen.intersect(pointable, true, 1);
+
+            float x = normalizedCoordinates.x * windowWidth;
+            float y = windowHeight - normalizedCoordinates.y * windowHeight;
+
+            std::stringstream ss;
+            ss << "Intersection point : " << "(" << x << ", " << y << ")" << std::endl;
+            gl::drawString( ss.str(), Vec2f( 0, 110 ), ColorA( 0, 0, 0, 1 ) );
+        }
 
         // Find the Leap Motion coordinates of a projection point
-        //Leap::Vector screenProjection = screen.project(pointable.tipPosition(), false);
-        //float x = screenProjection.x;
-        //float y = screenProjection.y;
         {
-            std::stringstream ss;
-            ss << normalizedCoordinates << std::endl;
-            ::OutputDebugStringA( ss.str().c_str() );
+            Leap::Vector screenProjection = screen.project(pointable.tipPosition(), false);
+            float x = screenProjection.x;
+            float y = screenProjection.y;
+            {
+                std::stringstream ss;
+                ss << "Projection point : " << screenProjection << std::endl;
+                gl::drawString( ss.str(), Vec2f( 0, 120 ), ColorA( 0, 0, 0, 1 ) );
+            }
         }
-        ////////
 
         // Find the distance between the pointing finger or tool and the screen
         //Leap::Vector intersection = screen.intersect(pointable, false);
@@ -126,15 +137,12 @@ void ScreenLocationApp::draw()
             gl::color(0, 0, 1, .05);
         }
 
+        Leap::Vector normalizedPosition = iBox.normalizePoint(pointable.stabilizedTipPosition());
+
+        float x = normalizedPosition.x * windowWidth;
+        float y = windowHeight - normalizedPosition.y * windowHeight;
         gl::drawSolidCircle(Vec2f(x,y), 40);
     }
-
-    std::stringstream ss;
-    for ( auto screen : leap.locatedScreens() ) {
-        ss << screen.widthPixels() << ", " << screen.heightPixels() << std::endl;
-        ss << screen << std::endl;
-    }
-    gl::drawString( ss.str(), Vec2f( 0, 0 ), ColorA( 0, 0, 0, 1 ) );
 }
 
 CINDER_APP_NATIVE( ScreenLocationApp, RendererGl )
