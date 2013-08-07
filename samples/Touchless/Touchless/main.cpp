@@ -1,83 +1,30 @@
 #include "Leap.h"
 
-#include "TouchInput.h"
-
-class LeapTouch
-{
-private:
-
-	bool enable;
-
-public:
-
-	TouchInput input;
-
-	enum State
-	{
-		Up,
-		Hover,
-		Touch,
-	} state;
-
-	LeapTouch()
-	{
-		state = Up;
-	}
-
-	void hover( int x, int y )
-	{
-		if ( state == Touch ) {
-			input.Up();
-		}
-		else {
-			input.Hover( x, y );
-		}
-
-		state = Hover;
-	}
-
-	void touch( int x, int y )
-	{
-		if ( state == Touch ) {
-			input.Drag( (int)x, (int)y );
-		}
-		else {
-			input.Down( (int)x, (int)y );
-		}
-
-		state = Touch;
-	}
-
-	void up()
-	{
-		if ( state != Up ) {
-			input.HoverUp();
-		}
-
-		state = Up;
-	}
-};
+#include "LeapTouch.h"
 
 class SampleListener : public Leap::Listener
 {
 public:
 
+    // 初期化処理
     virtual void onInit(const Leap::Controller& controller )
 	{
+        // アプリケーションがバックグラウンドでもLeapからのフレームデータを受け取れるようにする
 		controller.setPolicyFlags( Leap::Controller::PolicyFlag::POLICY_BACKGROUND_FRAMES );
 		controller.enableGesture( Leap::Gesture::Type::TYPE_CIRCLE );
 
         Leap::Config config = controller.config();
         std::cout << "Gesture.Circle.MinRadius: " << config.getFloat( "Gesture.Circle.MinRadius" ) << std::endl;
 
-
 		TouchInput::Initialize();
 	}
     
+    // フレーム更新処理
     virtual void onFrame(const Leap::Controller& controller )
 	{
 		auto frame = controller.frame();
 
+        // これinitでできるかな
 		auto screens = controller.locatedScreens();
 		if ( screens.empty() ) {
 			return ;
@@ -86,9 +33,6 @@ public:
 		auto screen = screens[0];
 		auto windowWidth = screen.widthPixels();
 		auto windowHeight = screen.heightPixels();
-
-		Leap::PointableList pointables = frame.pointables();
-		Leap::InteractionBox iBox = frame.interactionBox();
 
         ////// スタートメニューの部分だけ何とかしたい
 		for ( auto g : frame.gestures() ) {
@@ -104,12 +48,13 @@ public:
 		}
         //////
 
+		Leap::PointableList pointables = frame.pointables();
         if ( pointables.empty() ) {
             return;
         }
 
         auto& pointable = pointables[0];
-		Leap::Vector normalizedPosition = iBox.normalizePoint( pointable.stabilizedTipPosition() );
+		Leap::Vector normalizedPosition = frame.interactionBox().normalizePoint( pointable.stabilizedTipPosition() );
 		int x = (int)min( normalizedPosition.x * windowWidth, windowWidth - 1 );
 		int y = (int)min( windowHeight - normalizedPosition.y * windowHeight, windowHeight - 1 );
 
@@ -132,6 +77,7 @@ private:
     LeapTouch touch;
 };
 
+// main()
 void main()
 {
 	Leap::Controller leap;
