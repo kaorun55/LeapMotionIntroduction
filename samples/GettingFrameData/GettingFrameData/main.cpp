@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <Leap.h>
 
 void GettingFramesByPolling()
@@ -29,12 +29,12 @@ void GettingFramesByPolling()
 
     lastFrame = currentFrameid;
     
-    // w‚ÌˆÊ’u‚Ì•½‹Ï’l‚ğŒvZ‚·‚é
+    // æŒ‡ã®ä½ç½®ã®å¹³å‡å€¤ã‚’è¨ˆç®—ã™ã‚‹
     int count = 0;
     Leap::Vector average = Leap::Vector();
     Leap::Finger fingerToAverage = frame.fingers()[0];
     for( int i = 0; i < 10; i++ ) {
-        // ƒtƒŒ[ƒ€—š—ğ‚Æw‚ÌID‚ÅA‰ß‹‚Ìw‚ÌˆÊ’u‚ğæ“¾‚·‚é
+        // ãƒ•ãƒ¬ãƒ¼ãƒ å±¥æ­´ã¨æŒ‡ã®IDã§ã€éå»ã®æŒ‡ã®ä½ç½®ã‚’å–å¾—ã™ã‚‹
         Leap::Finger fingerFromFrame = leap.frame(i).finger(fingerToAverage.id());
         if( fingerFromFrame.isValid() ) {
             average += fingerFromFrame.tipPosition();
@@ -77,10 +77,10 @@ void GettingFramesWithCallbacks()
 void main()
 {
 #if 1
-  // ƒ|[ƒŠƒ“ƒO
+  // ãƒãƒ¼ãƒªãƒ³ã‚°
   GettingFramesByPolling();
 #else
-  // ƒR[ƒ‹ƒoƒbƒN
+  // ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
   GettingFramesWithCallbacks();
 #endif
 }
@@ -90,55 +90,114 @@ void main()
 #if 0
 void main()
 {
-    // ‰Šú‰»ˆ—(oninit()‘Š“–)
+    Leap::Controller leap;
+    int previousFrameId = -1;
+
+    // ä»¥å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—ã™ã‚‹
 
     while ( 1 ) {
-        // ƒtƒŒ[ƒ€XVˆ—(onFrame()‘Š“–)
+        auto frame = leap.frame();
+        if ( previousFrameId == frame.id() ) {
+            continue;
+        }
+
+        previousFrameId = frame.id();
+
+        // ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°å‡¦ç†(onFrame()ç›¸å½“)
     }
 
-    // I—¹ˆ—(onExit()‘Š“–)
+    // çµ‚äº†å‡¦ç†(onExit()ç›¸å½“)
+}
+#endif
+
+#if 0
+void main()
+{
+    bool isPrevConnected = false;
+    bool hadPrevFocus = false;
+    int previousFrameId = -1;
+
+    Leap::Controller leap;
+
+    // åˆæœŸåŒ–å‡¦ç†(oninit()ç›¸å½“)
+
+    while ( 1 ) {
+        auto frame = leap.frame();
+
+        // æ¥ç¶šçŠ¶æ…‹ã‚’ç¢ºèªã™ã‚‹
+        {
+            bool isCurrentConnected = leap.isConnected();
+            if ( isPrevConnected != isCurrentConnected ) {
+                if ( isCurrentConnected ) {
+                    // Leap Motion ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ãŒæ¥ç¶šã•ã‚ŒãŸ(onConnected()ç›¸å½“)
+                    std::cout << "Leap Motion connected." << std::endl;
+                }
+                else {
+                    // Leap Motion ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ãŒæŠœã‹ã‚ŒãŸ(onDisconnected()ç›¸å½“)
+                    std::cout << "Leap Motion disconnected." << std::endl;
+                }
+            }
+
+            isPrevConnected = isCurrentConnected;
+        }
+
+        // ãƒ•ã‚©ãƒ¼ã‚«ã‚¹çŠ¶æ…‹ã‚’ç¢ºèªã™ã‚‹
+        {
+            bool hadCurrentFocus = leap.hasFocus();
+            if ( hadPrevFocus != hadCurrentFocus ) {
+                if ( hadCurrentFocus ) {
+                    // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ãŒæœ‰åŠ¹ã«ãªã£ãŸ(onFocusGained()ç›¸å½“)
+                    std::cout << "Focus gained." << std::endl;
+                }
+                else {
+                    // ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ•ã‚©ãƒ¼ã‚«ã‚¹ãŒç„¡åŠ¹ã«ãªã£ãŸ(onFocusLost()ç›¸å½“)
+                    std::cout << "Focus lost." << std::endl;
+                }
+            }
+
+            hadPrevFocus = hadCurrentFocus;
+        }
+
+        // ãƒ•ãƒ¬ãƒ¼ãƒ ãŒæ›´æ–°ã•ã‚Œã¦ã„ãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
+        {
+            if ( previousFrameId == frame.id() ) {
+                continue;
+            }
+
+            previousFrameId = frame.id();
+        }
+
+        // ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°å‡¦ç†(onFrame()ç›¸å½“)
+    }
+
+    // çµ‚äº†å‡¦ç†(onExit()ç›¸å½“)
 }
 #endif
 
 #if 1
 void main()
 {
-    // ‰Šú‰»ˆ—(oninit()‘Š“–)
-    bool isPrevConnected = false;
-    bool hadPrevFocus = false;
-
     Leap::Controller leap;
+    int previousFrameId = -1;
 
     while ( 1 ) {
-        // ƒtƒŒ[ƒ€XVˆ—(onFrame()‘Š“–)
-
-        // Ú‘±ó‘Ô‚ğŠm”F‚·‚é
-        bool isCurrentConnected = leap.isConnected();
-        if ( isPrevConnected != isCurrentConnected ) {
-            if ( isCurrentConnected ) {
-                // Leap Motion ƒRƒ“ƒgƒ[ƒ‰[‚ªÚ‘±‚³‚ê‚½(onConnected()‘Š“–)
-            }
-            else {
-                // Leap Motion ƒRƒ“ƒgƒ[ƒ‰[‚ª”²‚©‚ê‚½(onDisconnected()‘Š“–)
-            }
+        // æœ€æ–°ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—ã™ã‚‹ (leap.frame( 0 ) ã¨åŒã˜)
+        auto currentFrame = leap.frame();
+        if ( previousFrameId == currentFrame.id() ) {
+            continue;
         }
 
-        isPrevConnected = isCurrentConnected;
+        previousFrameId = currentFrame.id();
 
-        // ƒtƒH[ƒJƒXó‘Ô‚ğŠm”F‚·‚é
-        bool hadCurrentFocus = leap.hasFocus();
-        if ( hadPrevFocus != hadCurrentFocus ) {
-            if ( hadCurrentFocus ) {
-                // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒtƒH[ƒJƒX‚ª—LŒø‚É‚È‚Á‚½(onFocusGained()‘Š“–)
-            }
-            else {
-                // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒtƒH[ƒJƒX‚ª–³Œø‚É‚È‚Á‚½(onFocusLost()‘Š“–)
-            }
+        // ç›´å‰ã®5ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å–å¾—ã™ã‚‹
+        std::cout << currentFrame.id() << ", ";
+        for ( int i = 1; i <= 5; ++i ) {
+            auto previousFrame = leap.frame( i );
+            std::cout << previousFrame.id() << ", ";
         }
-
-        hadPrevFocus = hadCurrentFocus;
+        std::cout << std::endl;
     }
 
-    // I—¹ˆ—(onExit()‘Š“–)
+    // çµ‚äº†å‡¦ç†(onExit()ç›¸å½“)
 }
 #endif
