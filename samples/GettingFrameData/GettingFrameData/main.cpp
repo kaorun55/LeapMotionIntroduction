@@ -73,6 +73,7 @@ void GettingFramesWithCallbacks()
   leap.removeListener( listner );
 }
 
+#if 0
 void main()
 {
 #if 1
@@ -83,3 +84,61 @@ void main()
   GettingFramesWithCallbacks();
 #endif
 }
+#endif
+
+
+#if 0
+void main()
+{
+    // 初期化処理(oninit()相当)
+
+    while ( 1 ) {
+        // フレーム更新処理(onFrame()相当)
+    }
+
+    // 終了処理(onExit()相当)
+}
+#endif
+
+#if 1
+void main()
+{
+    // 初期化処理(oninit()相当)
+    bool isPrevConnected = false;
+    bool hadPrevFocus = false;
+
+    Leap::Controller leap;
+
+    while ( 1 ) {
+        // フレーム更新処理(onFrame()相当)
+
+        // 接続状態を確認する
+        bool isCurrentConnected = leap.isConnected();
+        if ( isPrevConnected != isCurrentConnected ) {
+            if ( isCurrentConnected ) {
+                // Leap Motion コントローラーが接続された(onConnected()相当)
+            }
+            else {
+                // Leap Motion コントローラーが抜かれた(onDisconnected()相当)
+            }
+        }
+
+        isPrevConnected = isCurrentConnected;
+
+        // フォーカス状態を確認する
+        bool hadCurrentFocus = leap.hasFocus();
+        if ( hadPrevFocus != hadCurrentFocus ) {
+            if ( hadCurrentFocus ) {
+                // アプリケーションのフォーカスが有効になった(onFocusGained()相当)
+            }
+            else {
+                // アプリケーションのフォーカスが無効になった(onFocusLost()相当)
+            }
+        }
+
+        hadPrevFocus = hadCurrentFocus;
+    }
+
+    // 終了処理(onExit()相当)
+}
+#endif
