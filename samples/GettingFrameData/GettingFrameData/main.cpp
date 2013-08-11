@@ -8,6 +8,7 @@
 #include <iostream>
 #include <Leap.h>
 
+// ポーリングでフレームを取得する
 void GettingFramesByPolling()
 {
   Leap::Controller leap;
@@ -80,7 +81,8 @@ void GettingFramesWithCallbacks()
   leap.removeListener( listner );
 }
 
-#if 1
+// フレームの取り方のサンプル
+#if 0
 int main()
 {
 #if 0
@@ -96,6 +98,7 @@ int main()
 #endif
 
 
+// ポーリング処理の例
 #if 0
 int main()
 {
@@ -121,7 +124,8 @@ int main()
 }
 #endif
 
-#if 0
+// ポーリング時の接続状態およびフォーカス状態を取得する
+#if 1
 int main()
 {
   bool isPrevConnected = false;
@@ -187,6 +191,7 @@ int main()
 }
 #endif
 
+// 直前のフレームを取得する
 #if 0
 int main()
 {
