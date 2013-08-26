@@ -1,4 +1,4 @@
-#include <Leap.h>
+ï»¿#include <Leap.h>
 
 class SampleListener : public Leap::Listener
 {
@@ -16,7 +16,7 @@ public :
         auto frame = leap.frame();
 
 #if 0
-        // ¡‰ñ‚ÌƒtƒŒ[ƒ€‚ÅŒŸo‚µ‚½‚·‚×‚Ä‚ÌèAwAƒc[ƒ‹
+        // ä»Šå›ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§æ¤œå‡ºã—ãŸã™ã¹ã¦ã®æ‰‹ã€æŒ‡ã€ãƒ„ãƒ¼ãƒ«
         Leap::HandList hands = frame.hands();
         Leap::FingerList fingers = frame.fingers();
         Leap::ToolList tools = frame.tools();
@@ -31,7 +31,7 @@ public :
 #endif
 
 #if 0
-        // è‚ÌID‚©‚çA“¯‚¶è‚ğ’ÇÕ‚µ‘±‚¯‚é
+        // æ‰‹ã®IDã‹ã‚‰ã€åŒã˜æ‰‹ã‚’è¿½è·¡ã—ç¶šã‘ã‚‹
         if ( handId == -1 ) {
             handId = frame.hands()[0].id();
         }
@@ -39,31 +39,31 @@ public :
             Leap::Hand hand = frame.hand( handId );
             handId = hand.id();
 
-            // è‚Ìî•ñ‚ğ•\¦‚·‚é
+            // æ‰‹ã®æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
             std::cout << "ID : " << hand.id()
-                << " ˆÊ’u : " << hand.palmPosition()
-                << " ‘¬“x : " << hand.palmVelocity()
-                << " –@ü : " << hand.palmNormal()
-                << " Œü‚« : " << hand.direction()
+                << " ä½ç½® : " << hand.palmPosition()
+                << " é€Ÿåº¦ : " << hand.palmVelocity()
+                << " æ³•ç·š : " << hand.palmNormal()
+                << " å‘ã : " << hand.direction()
                 << std::endl;
         }
 #endif
 
 #if 0
-        // ˆê”Ô¶A‰EAè‘O‚Ìè‚ğæ“¾‚·‚é
+        // ä¸€ç•ªå·¦ã€å³ã€æ‰‹å‰ã®æ‰‹ã‚’å–å¾—ã™ã‚‹
         Leap::HandList hands = frame.hands();
         Leap::Hand leftMost = hands.leftmost();
         Leap::Hand rightMost = hands.leftmost();
         Leap::Hand frontMost = hands.frontmost();
 
-        std::cout << " ¶ : " << leftMost.palmPosition() 
-                  << " ‰E : " << rightMost.palmPosition()
-                  << " è‘O : " << frontMost.palmPosition()
+        std::cout << " å·¦ : " << leftMost.palmPosition() 
+                  << " å³ : " << rightMost.palmPosition()
+                  << " æ‰‹å‰ : " << frontMost.palmPosition()
                   << std::endl;
 #endif
 
 #if 0
-        // è‚É‘®‚µ‚Ä‚¢‚éw‚Æƒc[ƒ‹‚ğæ“¾‚·‚é
+        // æ‰‹ã«å±ã—ã¦ã„ã‚‹æŒ‡ã¨ãƒ„ãƒ¼ãƒ«ã‚’å–å¾—ã™ã‚‹
         for ( auto hand : frame.hands() ) {
             std::cout << "ID : " << hand.id()
                 << " Pointers : " << hand.pointables().count()
@@ -76,9 +76,9 @@ public :
 #if 0
         Leap::Finger finger = frame.fingers()[0];
         std::cout << "ID : " << finger.id()
-            << " ˆÊ’u : " << finger.tipPosition()
-            << " ‘¬“x : " << finger.tipVelocity()
-            << " Œü‚« : " << finger.direction()
+            << " ä½ç½® : " << finger.tipPosition()
+            << " é€Ÿåº¦ : " << finger.tipVelocity()
+            << " å‘ã : " << finger.direction()
             << std::endl;
 #endif
     }
