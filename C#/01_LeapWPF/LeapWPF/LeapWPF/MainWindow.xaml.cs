@@ -32,7 +32,7 @@ namespace LeapWPF
             windowWidth = (float)this.Width;
             windowHeight = (float)this.Height;
 
-            Leap.Frame frame = leap.Frame();
+            Frame frame = leap.Frame();
             InteractionBox interactionBox = leap.Frame().InteractionBox;
 
             foreach ( Pointable pointable in leap.Frame().Pointables ) {
@@ -41,14 +41,17 @@ namespace LeapWPF
                 float ty = windowHeight - normalizedPosition.y * windowHeight;
 
                 int alpha = 255;
+                // ホバー状態
                 if ( pointable.TouchDistance > 0 && pointable.TouchZone != Pointable.Zone.ZONENONE ) {
                     alpha = 255 - (int)(255 * pointable.TouchDistance);
                     touchIndicator.Color = Color.FromArgb( (byte)alpha, 0x0, 0xff, 0x0 );
                 }
+                // タッチ状態
                 else if ( pointable.TouchDistance <= 0 ) {
                     alpha = -(int)(255 * pointable.TouchDistance);
                     touchIndicator.Color = Color.FromArgb( (byte)alpha, 0xff, 0x0, 0x0 );
                 }
+                // タッチ対象外
                 else {
                     alpha = 50;
                     touchIndicator.Color = Color.FromArgb( (byte)alpha, 0x0, 0x0, 0xff );
