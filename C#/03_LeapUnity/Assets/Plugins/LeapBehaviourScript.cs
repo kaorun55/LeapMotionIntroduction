@@ -6,7 +6,7 @@ public class LeapBehaviourScript : MonoBehaviour {
     Controller controller = new Controller();
 
 	public int FingerCount;
-	public GameObject[] Fingers;
+	public GameObject[] FingerObjects;
 	
 	void SetVisible( GameObject obj, bool visible )
 	{
@@ -26,15 +26,15 @@ public class LeapBehaviourScript : MonoBehaviour {
 		
         InteractionBox interactionBox = frame.InteractionBox;
 
-		for ( int i = 0; i  < Fingers.Length; i++ ) {
-			var finger = frame.Fingers[i];
-			var gameObject = Fingers[i];
-			SetVisible( Fingers[i], finger.IsValid );
-			if ( finger.IsValid ) {
-	            Vector normalizedPosition = interactionBox.NormalizePoint( finger.TipPosition );
+		for ( int i = 0; i  < FingerObjects.Length; i++ ) {
+			var leapFinger = frame.Fingers[i];
+			var unityFinger = FingerObjects[i];
+			SetVisible( unityFinger, leapFinger.IsValid );
+			if ( leapFinger.IsValid ) {
+	            Vector normalizedPosition = interactionBox.NormalizePoint( leapFinger.TipPosition );
 				normalizedPosition *= 10;
 				normalizedPosition.z = -normalizedPosition.z;
-				gameObject.transform.localPosition = ToVector3( normalizedPosition );
+				unityFinger.transform.localPosition = ToVector3( normalizedPosition );
 			}
 		}
     }
